@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>列表</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<meta name="keywords" content="测壹发">
+<meta charset="UTF-8">
+<meta name="description" content="测壹发">
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resources/css/base.css" rel="stylesheet">
+</head>
+
+<body ng-app="typeListApp">
+	<div ng-controller="typeListCtrl" class="comment-wrap" >
+    <div class=" thumbnail" style="margin-bottom:0;">
+      <div class="caption">
+        <p>{{type}}</p>
+        <p style="color:#ccc;font-size:14px;">选择自己喜欢的测试！</p>
+        <hr/>
+        <!-- 列表 -->
+		<div style="border-bottom:1px solid #ccc;"  class="listGroup list-group media comment-list-item" ng-repeat="test in typeTestList"   ng-click="testToProblem(test.test_id)">
+			
+			<div class="media-left">
+				<a href="#" style="padding:5px 0 !important;">
+				 <img class="media-object  comment-list-item-img " style="height:76px;max-width:100px;"
+					ng-src="{{test.img}}" >
+					</a>
+			</div>
+			<div class="media-body comment-right-body">
+				<div class="media-heading" ></div>
+				<div class="pull-left">
+					<div class="comment-right-body-title" style="height:41px;overflow: hidden;"><span ng-bind="test.title"></span></div>
+					<div class="text-muted" style="color:#bfbebe;font-size:12px;">
+					<span style="float: left;" class="newsType"  ng-bind="test.type"></span>
+					<span style="float: left;line-height:14px;margin:0 5px;">|</span>
+					<span   ng-bind="test.update_date  | dateDiff"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 列表end -->
+      </div>
+    </div>
+    <!-- 底部 -->
+		<div class="comment-bottom" ng-if="noMore">Copyright 2017 itcast Inc,All rights reserved.</div>
+		<!--  底部end -->
+	</div>
+		<!-- cnzz -->
+		<div style="display:none;">
+		</div>
+		
+	<script src="/resources/js/jquery2.1.js"></script>
+	<script src="/resources/js/bootstrap3.2.0.js"></script>
+	<script src="/resources/js/angularjs.min.1.5.7.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/resources/js/base.js"></script>
+
+	<script>
+
+	$(function(){
+	});
+    	var typeListApp=angular.module('typeListApp',[]);
+    	typeListApp.filter("dateDiff",function(){
+                return function(dateTimeStamp){
+                    return myUtils.getDateDiff(dateTimeStamp);
+                }
+            });
+    	typeListApp.controller('typeListCtrl',function($scope){
+    		if(!myUtils.GetQueryString("type")){
+    		return;
+    		}
+    		$scope.type=myUtils.GetQueryString("type");
+    		
+    		$scope.noMore=false;//false还有，true没有更多
+    		$scope.typeTestList=[];//热门推荐初始化
+    		$scope.pageNum=1;//第多少个
+    		$scope.pageSize=10;//每页个数
+    		//热门推荐
+    		function initTypeTestList(){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/list/type??pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
+  		          success : function(data){
+  		      		        $scope.typeTestList=data;
+  		      		         myUtils.myPrevToast("加载完成", null, "remove");
+  		          }  
+  		          });
+  		}
+    		initTypeTestList();
+    		
+    		//下拉刷新
+    		function onReachBottom(){
+    			$scope.pageNum=$scope.pageNum+$scope.pageSize;
+    			$scope.pageSize=$scope.pageSize;
+    			myUtils.myFootLoadingToast("relative",null,function(){
+    			$.ajax({  
+  		          type : "get",
+  		          timeout: 3000,
+  		          async : false,
+  		          url : "/test/list/type?pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
+  		          success : function(data){
+  		      		     myUtils.myFootLoadingToast("relative",null,null,"remove");
+  		        	 if(data.length<=0){
+  		        	 $scope.noMore=true;
+  		        	 $scope.$apply();
+  		        	      return;
+  		        	    }
+  		        	    $scope.noMore=false;
+  		      		        $scope.typeTestList=$scope.typeTestList.concat(data);
+  		      		        $scope.$apply();
+  		      		         myUtils.myPrevToast("加载完成", null, "remove");
+  		          }  
+  		          });
+    			},"add");
+  		}
+    		$(window).scroll(function(){
+        		//console.log(myUtils.isScrollBottom(document));
+        	if(!navigator.onLine){
+        		myUtils.myLoadingToast("请检查网络！");
+        		return;
+        		}
+        		if(navigator.onLine && $scope.noMore==false && myUtils.isScrollBottom(document)){
+        			onReachBottom();
+        		}
+        			
+        		});
+        		//跳转页面
+    		$scope.testToProblem=function(test_id){
+    			location.replace("/problem?test_id="+test_id);
+    		};
+        		
+    	});
+    	
+    	
+    </script>   
+</body>
+</html>

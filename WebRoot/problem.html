@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>问题</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<meta name="keywords" content="测壹发">
+<meta charset="UTF-8">
+<meta name="description" content="测壹发">
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resources/css/base.css" rel="stylesheet">
+</head>
+
+<body ng-app="problemApp">
+	<div ng-controller="problemCtrl" class="comment-wrap" >
+    <div class=" thumbnail" style="margin-bottom:0;">
+	<!-- 问题图片 -->
+      <img ng-src="{{test.img}}" >
+	<!-- 问题图片 end-->
+      <div class="caption">
+        <h3><span ng-bind="test.title"></span></h3>
+        <hr/>
+        <p ><span ng-bind="problem.name"></span></p>
+        <hr/>
+        <p ng-repeat="answer in problem.answerList">
+<!--         <p ng-repeat="answer in answerList"> -->
+        <a href="/answer?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+       <span ng-bind="answer.name"></span>
+        </a> 
+        <a href="/problem?test_id={{test.test_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+       <span ng-bind="answer.name"></span>
+        </a>  
+        </p>
+      </div>
+    </div>
+	</div>
+		<!-- cnzz -->
+		<div style="display:none;">
+		</div>
+		
+	<script src="/resources/js/jquery2.1.js"></script>
+	<script src="/resources/js/bootstrap3.2.0.js"></script>
+	<script src="/resources/js/angularjs.min.1.5.7.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/resources/js/base.js"></script>
+
+	<script>
+
+	$(function(){
+	});
+    	var problemApp=angular.module('problemApp',[]);
+    	problemApp.controller('problemCtrl',function($scope){
+    		if(!myUtils.GetQueryString("test_id")){
+    		return;
+    		}
+    		$scope.test_id=myUtils.GetQueryString("test_id");
+    		$scope.problem_id=myUtils.GetQueryString("problem_id");
+    		$scope.order_number=myUtils.GetQueryString("order_number");
+    		//初始化问题
+    		function initProblem(){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/"+$scope.test_id+"/all",  
+  		          success : function(data){
+  		           $scope.test=JSON.parse(data);
+  		           console.log($scope.test)
+  	//直接跳转到问题，开始测试
+    if($scope.problem_id){
+    for (var i = 0; i < $scope.test.problemList.length; i++) {
+      if($scope.test.problemList[i].problem_id==$scope.problem_id){
+           $scope.problem=$scope.test.problemList[i];
+      }
+    }
+    }else if($scope.order_number){
+      //测试题目进行中
+      for (var i = 0; i < $scope.test.problemList.length; i++) {
+      if($scope.test.problemList[i].order_number==$scope.order_number){
+           $scope.problem=$scope.test.problemList[i];
+      }
+    }
+    }else if(!$scope.problem_id&&!$scope.order_number){
+      //如果没有problem_id也没有order_number，则默认为第一个
+           $scope.problem=$scope.test.problemList[0];
+    }
+    //$scope.answerList= $scope.problem.answerList;
+    //console.log($scope.answerList)
+      //微信接口
+  		      		  var el = $( "<div id='problemid'></div>");
+  		        	$(el).html($scope.problem.name);
+  		        	//微信分享接口
+  		        	if(myUtils.isWeiXinBrowse()){
+  		        	wx.ready(function(){
+							    wx.onMenuShareAppMessage({
+							      title: $scope.test.title,
+							      desc: $(el).text().substring(0, 30)+"...",
+							     link: location.href.split('#')[0],
+							      imgUrl: 'http://'+location.host+$scope.test.img,
+							      trigger: function (res) {
+							        // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+							       // alert('用户点击发送给朋友');
+							      },
+							      success: function (res) {
+							        myUtils.myLoadingToast("分享成功", null);
+							      },
+							      cancel: function (res) {
+							        myUtils.myLoadingToast("取消分享", null);
+							      },
+							      fail: function (res) {
+							        myUtils.myLoadingToast("分享失败", null);
+							      }
+							    });	
+							    wx.onMenuShareTimeline({
+							        title: $scope.test.title, // 分享标题
+							        link: location.href.split('#')[0], // 分享链接
+							        imgUrl: 'http://'+location.host+$scope.test.img, // 分享图标
+							        success: function () { 
+							        	myUtils.myLoadingToast("分享成功", null);
+							        },
+							        cancel: function () { 
+							        	myUtils.myLoadingToast("取消分享", null);
+							        }
+							    });
+
+					});}
+    
+  		          }  
+  		          });
+  		}
+    		initProblem();
+    		
+    	});
+    	
+    	
+    </script>   
+</body>
+</html>

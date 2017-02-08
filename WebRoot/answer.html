@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>答案</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<meta name="keywords" content="测壹发">
+<meta charset="UTF-8">
+<meta name="description" content="测壹发">
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resources/css/base.css" rel="stylesheet">
+</head>
+
+<body ng-app="answerApp">
+	<div ng-controller="answerCtrl" class="comment-wrap" >
+    <div class=" thumbnail" style="margin-bottom:0;">
+	<!-- 图片 -->
+      <img ng-src="{{test.img}}" >
+	<!-- 图片 end-->
+      <div class="caption">
+        <p>测试结果分析：</p>
+        <p>您选择的是<span style="color:red" ng-bind="answer.name"></span></p>
+        <hr/>
+        <p style="word-wrap: break-word;white-space:normal !important;">
+      <span  ng-bind="answer.result"></span>
+        </p>
+        <p style="word-wrap: break-word;white-space:normal !important;">
+      <a href="/type_list?type={{test.type}}"  class="btn btn-info ">
+       	测壹发
+        </a>  
+        <a href="/index" class="btn btn-success">
+       	返回首页
+        </a>  
+        </p>
+      </div>
+    </div>
+	</div>
+		<!-- cnzz -->
+		<div style="display:none;">
+		</div>
+		
+	<script src="/resources/js/jquery2.1.js"></script>
+	<script src="/resources/js/bootstrap3.2.0.js"></script>
+	<script src="/resources/js/angularjs.min.1.5.7.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/resources/js/base.js"></script>
+
+	<script>
+
+	$(function(){
+	});
+    	var answerApp=angular.module('answerApp',[]);
+    	answerApp.controller('answerCtrl',function($scope){
+    		if(!myUtils.GetQueryString("test_id")){
+    		return;
+    		}
+    		$scope.test_id=myUtils.GetQueryString("test_id");
+    		$scope.problem_id=myUtils.GetQueryString("problem_id");
+    		$scope.answer_id=myUtils.GetQueryString("answer_id");
+    		//初始化答案
+    		function initAnswer(){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/"+$scope.test_id+"/all",  
+  		          success : function(data){
+  		           $scope.test=JSON.parse(data);
+    		for (var i = 0; i < $scope.test.problemList.length; i++) {
+      if($scope.test.problemList[i].problem_id==$scope.problem_id){
+           $scope.problem=$scope.test.problemList[i];
+        for (var j = 0; j < $scope.test.problemList[i].answerList.length; j++) {
+          if($scope.test.problemList[i].answerList[j].answer_id==$scope.answer_id){
+           $scope.answer=$scope.test.problemList[i].answerList[j];
+          }
+        };
+      }
+    };
+  		          }  
+  		          });
+  		}
+    		initAnswer();
+    	});
+    	
+    	
+    </script>   
+</body>
+</html>

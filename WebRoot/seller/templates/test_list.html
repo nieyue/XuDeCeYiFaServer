@@ -1,0 +1,50 @@
+<!-- 测试列表选择 -->
+<div style="margin:10px;">
+	<button class="btn btn-primary" ng-click="allTest()">全部测试列表</button>
+	<hr/>
+	 <label  class="text-danger" style="font-size:30px;color:#ccc;">分类</label>
+	 <br/>
+	<button class="btn btn-info" ng-click="listType('爱情测试')">爱情测试</button>
+	<button class="btn btn-info" ng-click="listType('职场测试')">职场测试</button>
+	<button class="btn btn-info" ng-click="listType('星座测试')">星座测试</button>
+	<button class="btn btn-info" ng-click="listType('财运测试')">财运测试</button>
+	<button class="btn btn-info" ng-click="listType('性格测试')">性格测试</button>
+	<button class="btn btn-info" ng-click="listType('社交测试')">社交测试</button>
+	<hr/>
+</div>
+<!-- 测试列表选择end -->
+<!-- 测试列表 -->
+	<div class="panel panel-default">
+  <!-- Default panel contents -->
+  		 <div class="panel-heading">测试列表</div>
+  	</div>
+	<div class="listGroup panel panel-default" ng-repeat="test in testList" ng-click="testDetails(test.test_id)">
+  <!-- Default panel contents -->
+ 		 <div class="panel-body">
+   		 	<div class="media-left">
+				<a > <img class="media-object  comment-list-item-img " style="margin-top:12px;"
+					ng-src="{{test.img||''}}" >
+				</a>
+			</div>
+			<div class="media-body comment-right-body">
+				<div class="media-heading" ></div>
+				<div class="pull-left">
+					<div class="comment-right-body-title"><span ng-bind="test.title||''"></span></div>
+					<div class="text-muted"><span ng-bind="test.update_date||''"></span><span class="newsType" ng-bind="test.type||''"></span></div>
+				</div>
+				<div class="pull-right">
+					<button class=" btn btn-warning" ng-click="updateTest(test)"><span class="glyphicon glyphicon-pencil"></span>编辑</button>
+					<button class=" btn btn-danger" ng-click="deleteTest(test)"><span class="glyphicon glyphicon-trash"></span>删除</button>
+				</div>
+				<!-- <div class="pull-right" ng-init="news.type=='PC端'?newsDetails='pc_news_details':newsDetails='news_details'">
+				</div> -->
+			</div>
+ 		 </div>
+ 		 
+  	</div>
+<!-- 测试列表end -->
+<!-- 加载更多end -->
+	<a class="btn btn-default btn-block text-center" ng-if="testList.length>=10" id="addMore" ng-click="addMore(newsList)">
+		<div>点击加载更多》</div>
+	</a>
+<!--  加载更多end -->

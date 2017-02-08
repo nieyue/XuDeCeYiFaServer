@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+		<title>新闻后台管理系统</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+	<meta name="Keywords" content="系统，管理"/>
+	 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+     <link href="/resources/css/sellerbase.css" rel="stylesheet">
+	
+    
+</head>
+   <body ng-app="mainApp" ng-controller="mainCtrl">
+  	<div ui-view></div>
+<!-- 按钮触发模态框 -->
+<button class="hide" data-toggle="modal" 
+   data-target="#myModal" id="mySellerModal">
+</button>
+	<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" 
+   aria-labelledby="myModalLabel" aria-hidden="true">
+   <div class="modal-dialog" >
+      <div class="modal-content">
+         <div class="modal-header">
+            <button type="button" class="close" 
+               data-dismiss="modal" aria-hidden="true" id="closeModal">
+                  &times;
+            </button>
+            <h4 class="modal-title" id="mySellerModalLabel">
+            </h4>
+         </div>
+         <div class="modal-body" id="mySellerModalBody">
+         </div>
+         <div class="modal-footer">
+         	<div id="errorSellerInfo" class="text-justify text-danger"></div>
+            <button type="button" class="btn btn-primary" id="sellerSubmit">
+               提交
+            </button>
+         </div>
+      </div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+		<script src="/resources/js/jquery2.1.js"></script>
+		<script src="/resources/js/bootstrap3.2.0.js"></script>
+		<script src="/resources/js/angularjs.min.1.5.7.js"></script>
+		<script src="/resources/js/angular-animate.min.js"></script>
+		<script src="/resources/js/angular-ui-router.min.js"></script>
+        <script src="/resources/js/sortable.min.js"></script>
+       <script src="/resources/js/base64.js"></script> 
+       <script src="/resources/js/base.js"></script> 
+       <script type="text/javascript">
+       
+       angular.module('mainApp', ['ngAnimate','ui.router'])
+       .config(function ($stateProvider, $urlRouterProvider) {
+     	$urlRouterProvider.when("", "main");
+     	$stateProvider
+     	.state("main", {
+            url: "/main",
+            views: {
+                '': {
+                    templateUrl: '/seller/templates/main.html'
+                },
+                'topbar@main': {
+                    templateUrl: '/seller/templates/topbar.html'
+                },
+                'leftbar@main': {
+                    templateUrl: '/seller/templates/leftbar.html',
+                    controller:function(){
+                    	myUtils.myClickRotate("a.toCaret","span.caret");//箭头旋转
+                    }
+                } ,
+                'rightbody@main': {
+                    templateUrl: '/seller/templates/notice.html'
+                } 
+            }
+        })
+         .state("main.notice", {
+            url:"/notice",
+            views: {
+            	'rightbody@main': {
+                    templateUrl: "/seller/templates/notice.html"
+                } 
+            }
+        })
+         .state("main.update", {
+            url:"/update/:test_id",
+            views: {
+            	'rightbody@main': {
+                    templateUrl: "/seller/templates/test_update.html"
+                    ,controller:function($scope,$state){
+                    	//单个测试列表
+                   		function initSingleTest(test_id){
+                   			var urllist="/test/"+test_id+"/all";
+                			$.ajax({  
+                		          type : "get",  
+                		          url : urllist,  
+                		          async : false,  
+                		          success : function(data){
+                		        	  console.log(data);
+                		        	  $scope.test=JSON.parse(data);
+                		          }  
+                		          });  
+                		}
+                   		//初始化
+                		initSingleTest($state.params.test_id);
+                   		//result 与 order_number转换
+                   		$scope.answerResultTransform=function(answer){
+							if(answer.type=="跳转"){
+								answer.result=parseInt(answer.result);
+                   			console.log(answer)
+							}
+                   		}
+                   	//上传测试图片
+                 		$("#updateTestFileUpload").change(function(){
+                    		//console.log($("#testFileUpload"))
+                 		//function testFileUpload(){
+                 			myUtils.fileUpload(
+                 				    {inputfile:$("#updateTestFileUpload"),
+                 				    ajaxObj:{
+                 				        formData:[
+                 				            {key:"testFileUpload",value:$("#updateTestFileUpload").get(0).files[0]}
+                 				            ],
+                 				        url:"/test/img/add",
+                 				        success:(data)=>{
+                 				            if(data){
+                 				            myUtils.myLoadingToast("上传成功",null);
+                 				            myUtils.myPrevToast("上传成功",null,"remove");
+                 				           $scope.test.img=data;
+                 				           $scope.$apply();
+                 				            }
+                 				        }
+                 				    }
+                 				}
+                 				);
+                 		});
+                   		//更新
+                		$scope.updateTestForm=function(){
+                			myUtils.myPrevToast("添加中", function(){
+                        		$.ajax({  
+                  		          url : "/test/update/all",  
+                  		          type : "post",  
+                  		         // contentType:"application/json",
+                  		          data:{testDTO:angular.toJson($scope.test)},
+                  		         // async : true,  
+                  		          success : function(data){
+                  		        	if(data.code==200){
+                  		        	  myUtils.myPrevToast("修改成功", null, "remove");
+                  		        	  return;
+                  		        	  }
+                  		        	  myUtils.myPrevToast("修改失败", null, "remove");
+                  		          }  
+                  		          });  
+                        		}, "add");
+                			};
+                		}
+                    }
+                } 
+        })
+        .state("main.testList", {
+            url:"/testList",
+            views: {
+            	'rightbody@main': {
+                    templateUrl: "/seller/templates/test_list.html"
+                	,controller:function($scope,$state){
+                		//列表
+                   		function initData(a){
+                   			var urllist="";
+                			if(a.type){
+                				urllist="/test/list/type?type="+a.type+"&pageNum="+a.pageNum+"&pageSize="+a.pageSize+"&orderName="+a.orderName+"&orderWay="+a.orderWay;
+                			}else{
+                				urllist="/test/list?pageNum="+a.pageNum+"&pageSize="+a.pageSize+"&orderName="+a.orderName+"&orderWay="+a.orderWay;
+                			}
+                			$.ajax({  
+                		          type : "get",  
+                		          url : urllist,  
+                		          async : false,  
+                		          success : function(data){
+                		        	  $scope.noMore=false;
+                		        	  if(data==''){
+                		        		  $("#addMore").hide();
+                		        		  $scope.noMore=true;
+                		        		  return ;
+                		        	  }else{
+                		        		  $("#addMore").show();
+                		        		  
+                		        	  }
+                		        	  if(a.pageNum>1){
+                		        		  for (var int = 0; int < data.length; int++) {
+                		        			$scope.testList.push(data[int]); 
+                						}
+                		        	  }else{
+                		        	  $scope.testList=data; 
+                		        		  
+                		        	  } 
+                		        	  myUtils.myPrevToast("加载完成", null, "remove");
+                		          }  
+                		          });  
+                		}
+                   		$scope.testList=[];
+                		//初始化分页的开始的数目
+                		$scope.pageNum=1;
+                		//初始化分页的每页数
+                		$scope.perPageSize=10;
+                		//初始化分类型,默认没有类型
+                		$scope.perType=null;
+                		//初始化没有更多了
+                		$scope.noMore=false;
+                   		//初始化
+                		initData({
+                			pageNum:$scope.pageNum,
+                			pageSize:$scope.perPageSize,
+                			type:$scope.perType,
+                			orderName:"update_date",
+                			orderWay:"desc"
+                			});	
+                   		//全部测试列表
+                   		$scope.allTest=function(){
+                   			$scope.perType=null;
+                   			$scope.pageNum=1;
+                   			initData({
+                    			pageNum:$scope.pageNum,
+                    			pageSize:$scope.perPageSize,
+                    			type:$scope.perType,
+                    			orderName:"update_date",
+                    			orderWay:"desc"
+                    			});	
+                   			$("#addMore").show();//显示加载
+                   		};
+                   	
+                   		//介绍
+                   		$scope.listType=function(typeName){
+                   			$scope.perType=typeName;
+                   			$scope.pageNum=1;
+                   			initData({
+                    			pageNum:$scope.pageNum,
+                    			pageSize:$scope.perPageSize,
+                    			type:$scope.perType,
+                    			orderName:"update_date",
+                    			orderWay:"desc"
+                    			});	
+                   			$("#addMore").show();//显示加载
+                   		};
+                   		
+                   		//获取更多
+                		$scope.addMore=function(){
+                			$("#addMore").children().text("正在加载中...");
+                			//var pageNum=$(".listGroup").size()+1;
+                			//var type=$(".nav-active div").text().trim();
+                			//console.log($scope.perType)
+                			$scope.pageNum=$scope.pageNum+$scope.perPageSize;
+                			initData({
+                    			pageNum:$scope.pageNum,
+                    			pageSize:$scope.perPageSize,
+                    			type:$scope.perType,
+                    			orderName:"update_date",
+                    			orderWay:"desc"
+                    			});
+                						
+                			$("#addMore").children().text("点击加载更多》");
+                		}; 
+                		//跳转更新
+                		$scope.updateTest=function(test){
+	                	$state.go("main.update",{test_id:test.test_id})	
+                		}
+                		//删除new
+                		$scope.deleteTest=function(test){
+                			myUtils.myLoginOut("确定删除吗？", function(){
+                   				$.get("/test/"+test.test_id+"/delete",function(data){
+                   					console.log($scope.testList)
+                   	   				if(data.code==200){
+                   	   				$scope.testList.splice($scope.testList.indexOf(test), 1);
+                   	   				//$scope.newsList.splice(news.news_id,1);
+                   	   				$scope.$apply();
+                   	   				myUtils.myLoadingToast("删除成功", null); 
+                   	   				
+                   	   				}else{
+                   	   					myUtils.myLoadingToast("删除失败", null);   	   				
+                   	   				}
+                   	   			});
+                   			});
+                			
+                		};
+                		
+                    }
+            	} 
+            }
+        })
+        .state("main.testAdd", {
+            url:"/testAdd",
+            views: {
+            	'rightbody@main': {
+                    templateUrl: "/seller/templates/test_add.html",
+                    controller:function($scope){
+                    	$scope.test={
+                    		 test_id:'',
+                    		 title:'',
+                    		 type:'爱情测试',
+                    		 level:10,
+                    		 img:'',
+                    		 update_date:'',
+                    		 problemList:[
+                    		           {
+                    		        	   problem_id:'',
+                    		        	   name:'',
+                    		        	   type:'',
+                    		        	   img:'',
+                    		        	   order_number:'',
+                    		        	   update_date:'',
+                    		        	   answerList:[
+                    		        	               {
+                    		        	            	   answer_id:'',  
+                    		        	            	   name:'',  
+                    		        	            	   type:'',  
+                    		        	            	   img:'',  
+                    		        	            	   result:'',  
+                    		        	            	   update_date:''  
+                    		        	               }]
+                    		        	   
+                    		           }]                    		 
+                    	};
+                    	
+                    	//问题数目改变
+                    	$scope.problemListChange=function(problemNumber){
+                    		$scope.test.problemList=[];
+                    		//console.log(problemNumber)
+                    		for (var i = 0; i < problemNumber; i++) {
+                    			$scope.test.problemList.push({
+                    			   problem_id:'',
+             		        	   name:'',
+             		        	   type:'',
+             		        	   img:'',
+             		        	   order_number:'',
+             		        	   update_date:'',
+             		        	  answerList:[
+           		        	               {
+           		        	            	   answer_id:'',  
+           		        	            	   name:'',  
+           		        	            	   type:'',  
+           		        	            	   img:'',  
+           		        	            	   result:'',  
+           		        	            	   update_date:''  
+           		        	               }]
+	        	               });
+    							}
+                    	};
+                    	//答案数目改变
+                    	$scope.answerListChange=function(problem,answerNumber){
+                    		for (var i = 0; i < $scope.test.problemList.length; i++) {
+                    			//选择得当前问题
+                    			if($scope.test.problemList[i]==problem){
+                    			$scope.test.problemList[i].answerList=[];
+                    			//console.log(problem)
+                    			//console.log(answerNumber)
+                    			for (var j = 0; j < answerNumber; j++) {
+                    			//console.log($scope.test.problemList[i].answerList)
+                    			$scope.test.problemList[i].answerList.push({
+                    				   answer_id:'',  
+		        	            	   name:'',  
+		        	            	   type:'',  
+		        	            	   img:'',  
+		        	            	   result:'',  
+		        	            	   update_date:'',  
+	        	               });
+								}
+                    			}
+    						}
+                    	};
+                    	//上传测试图片
+                 		$("#testFileUpload").change(function(){
+                    		//console.log($("#testFileUpload"))
+                 		//function testFileUpload(){
+                 			myUtils.fileUpload(
+                 				    {inputfile:$("#testFileUpload"),
+                 				    ajaxObj:{
+                 				        formData:[
+                 				            {key:"testFileUpload",value:$("#testFileUpload").get(0).files[0]}
+                 				            ],
+                 				        url:"/test/img/add",
+                 				        success:(data)=>{
+                 				            if(data){
+                 				            myUtils.myLoadingToast("上传成功",null);
+                 				            myUtils.myPrevToast("上传成功",null,"remove");
+                 				           $scope.test.img=data;
+                 				           $scope.$apply();
+                 				            }
+                 				        }
+                 				    }
+                 				}
+                 				);
+                 		});
+                     	    //提交表单
+                    	$scope.addTestForm=function(){
+                    		myUtils.myPrevToast("添加中", function(){
+                    		$.ajax({  
+              		          url : "/test/add/all",  
+              		          type : "post",  
+              		         // contentType:"application/json",
+              		          data:{testDTO:angular.toJson($scope.test)},
+              		         // async : true,  
+              		          success : function(data){
+              		        	if(data.code==200){
+              		        		$scope.test={
+              	                    		 test_id:'',
+              	                    		 title:'',
+              	                    		 type:'爱情测试',
+              	                    		 level:10,
+              	                    		 img:'',
+              	                    		 update_date:'',
+              	                    		 problemList:[
+              	                    		           {
+              	                    		        	   problem_id:'',
+              	                    		        	   name:'',
+              	                    		        	   type:'',
+              	                    		        	   img:'',
+              	                    		        	   order_number:'',
+              	                    		        	   update_date:'',
+              	                    		        	   answerList:[
+              	                    		        	               {
+              	                    		        	            	   answer_id:'',  
+              	                    		        	            	   name:'',  
+              	                    		        	            	   type:'',  
+              	                    		        	            	   img:'',  
+              	                    		        	            	   result:'',  
+              	                    		        	            	   update_date:''  
+              	                    		        	               }]
+              	                    		        	   
+              	                    		           }]                    		 
+              	                    	};
+              		        	  $scope.$apply();
+              		        	  myUtils.myPrevToast("添加成功", null, "remove");
+              		        	  return;
+              		        	  }
+              		        	  myUtils.myPrevToast("添加失败", null, "remove");
+              		          }  
+              		          });  
+                    		}, "add");
+             			};
+                    }
+                } 
+            }
+        });
+		})
+       .controller('mainCtrl', function($scope,$http) {
+    	 //设置高度
+    	 setInterval(function(){
+			$(".seller-main-body").height($(".seller-main-body-right").height()+50);
+    		 
+    	 }, 300);
+    	 //验证是否已经登录
+    		$.get("/admin/islogin",function(data){
+       			console.log(data)
+       			//$scope.manager_phone=data.manager_phone;
+       		if(data==null||data==''){
+       			location.replace("/seller/index");
+       		}
+       	});
+   		//登录退出
+   		$scope.sellerLoginOut=function(){
+   			myUtils.myLoginOut("确定退出吗？", function(){
+   				$.get("/admin/loginout",function(data){
+   	   					myUtils.myLoadingToast("退出成功", null);   	   				
+   						location.replace("/seller/index");
+   	   			});
+   			});
+   		};
+   		
+   		});			
+     
+		</script>
+        </body>
+</html>

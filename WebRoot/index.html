@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>测壹发</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport"
+	content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+<meta name="keywords" content="测壹发">
+<meta charset="UTF-8">
+<meta name="description"  content="测壹发">
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resources/css/base.css" rel="stylesheet">
+<style>
+html,body{
+background-color: white;
+}
+</style>
+</head>
+
+<body ng-app="indexApp">
+	<div ng-controller="indexCtrl" class="comment-wrap">
+	<!-- 标志 -->
+		<div class="comment-top-fixed comment-title-top">
+		<span class="comment-title-center" >测壹发</span>
+		</div>
+	<!-- 标志end -->
+		<!-- 新闻列表 -->
+		<div style="margin-top:50px !important;">
+		
+			<!-- testHot -->
+		<div   class="listGroup list-group media "  >
+			 <div style="position:relative;left:0;top:0">
+			  <a style="padding:0 !important;" href="/problem?test_id={{testHot.test_id}}&problem_id={{testHot.problemList[0].problem_id}}" >
+			    <img class="app-topbar" ng-src="{{testHot.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
+			    <div style="position:absolute;left:5%;top:20%;color:white;width:90%;font-size:26px;" class="app-center">{{testHot.title}}
+			    </div>
+			<div style="position:absolute;left:10%;top:60%;color:white;width:80%;font-size:16px;" class="app-center">{{testHot.problemList[0].name}}</div>
+			  </a>
+			  </div>
+		</div>
+		<!-- testHot end -->
+			<!-- testList -->
+		<div   class="listGroup list-group media "  ng-repeat="test in testList">
+			 <div style="position:relative;left:0;top:0">
+			  <a style="padding:0 !important;" href="/problem?test_id={{test.test_id}}&problem_id={{test.problemList[0].problem_id}}" >
+			    <img class="app-topbar" ng-src="{{test.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
+			    <div style="position:absolute;left:5%;top:20%;color:white;width:90%;font-size:26px;" class="app-center">{{test.title}}
+			    </div>
+			<div style="position:absolute;left:10%;top:60%;color:white;width:80%;font-size:16px;" class="app-center">{{test.problemList[0].name}}</div>
+			  </a>
+			  </div>
+		</div>
+		<!-- testList end -->
+		
+		<!-- 分类推荐 -->
+		<div class="list-group media comment-list-item">
+			<div class="media-center">
+				<div class="comment-hot-title">
+					<span class="comment-hot-icon"></span>
+					<span class="comment-hot-word">分类推荐</span>
+					<span class="comment-hot-line"></span>
+				</div>
+			</div>
+		</div>
+		<!-- 分类推荐 九宫图 -->
+		 <div style="text-align:center;">
+                <a  href="/type_list?type={{test.type}}" style="margin:3px 3px;display:inline-block;width:31% !important;position:relative;left:0;top:0;padding:0 !important;" ng-repeat="test in testList">
+                    <img style="width:100%;" ng-src="{{test.img}}" />
+                     <div style="position:absolute;left:0;top:30%;color:white;width:100%;font-size:16px;">
+                     <div style="text-align:center;" class="app-center">{{test.type}}
+                     </div>
+    		</div>
+                </a>
+            </div>
+            <!-- 分类推荐 九宫图 end-->
+            <!-- 分类推荐 end -->
+            <!-- 热门推荐 -->
+		<div class="list-group media comment-list-item">
+			<div class="media-center">
+				<div class="comment-hot-title">
+					<span class="comment-hot-icon"></span>
+					<span class="comment-hot-word">热门推荐</span>
+					<span class="comment-hot-line"></span>
+				</div>
+			</div>
+		</div>
+		<!-- 热门推荐 end -->
+			
+		<!-- 列表 -->
+		<div style="border-bottom:1px solid #ccc;"  class="listGroup list-group media comment-list-item" ng-repeat="hotTest in hotTestList"   ng-click="testToProblem(hotTest.test_id)">
+			
+			<div class="media-left">
+				<a href="#" style="padding:5px 0 !important;">
+				 <img class="media-object  comment-list-item-img "
+					ng-src="{{hotTest.img}}" >
+					</a>
+			</div>
+			<div class="media-body comment-right-body">
+				<div class="media-heading" ></div>
+				<div class="pull-left">
+					<div class="comment-right-body-title" style="height:41px;overflow: hidden;"><span ng-bind="hotTest.title"></span></div>
+					<div class="text-muted" style="color:#bfbebe;font-size:12px;">
+					<span style="float: left;" class="newsType"  ng-bind="hotTest.type"></span>
+					<span style="float: left;line-height:14px;margin:0 5px;">|</span>
+					<span   ng-bind="hotTest.update_date  | dateDiff"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 列表end -->
+
+		</div>
+		<!-- 新闻列表end -->
+		<!-- 底部 -->
+		<div class="comment-bottom" ng-if="noMore">Copyright 2017 itcast Inc,All rights reserved.</div>
+		<!--  底部end -->
+	</div>
+		<!-- cnzz -->
+		<div style="display:none;">
+		</div>
+	<script src="/resources/js/jquery2.1.js"></script>
+	<script src="/resources/js/bootstrap3.2.0.js"></script>
+	<script src="/resources/js/angularjs.min.1.5.7.js"></script>
+	<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+	<script src="/resources/js/base.js"></script>
+	<script>
+	$(function(){
+		/* $(window).scroll(function(){
+    		console.log(myUtils.isScrollBottom(document));
+    		if(myUtils.isScrollBottom(document)){}
+    			
+    		}); */
+	});
+    	var indexApp=angular.module('indexApp',[]);
+    	indexApp.filter("dateDiff",function(){
+                return function(dateTimeStamp){
+                    return myUtils.getDateDiff(dateTimeStamp);
+                }
+            });
+    	indexApp.controller('indexCtrl',function($scope,$sce){
+  		//初始化等级为1的热门测试，1个
+    		function initTestHot(){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/list/all",  
+  		          success : function(data){
+  		        	 for (var i = 0; i < data.length; i++) {
+  		        		if(data[i].level==1){
+  		        			$.ajax({  
+  		      		          type : "get", 
+  		      		          async : false,
+  		      		          url : "/test/"+data[i].test_id+"/all",  
+  		      		          success : function(d){
+  		      		        	$scope.testHot=JSON.parse(d);
+  		      		       // $scope.testHot.img="https://ceyifa.fuwu88.cn"+$scope.testHot.img;
+  		      		   //微信接口
+  		      		  var el = $( "<div id='testid'></div>");
+  		        	$(el).html($scope.testHot.problemList[0].name);
+  		        	//$scope.testHot.problemList[0].name=$sce.trustAsHtml($scope.testHot.problemList[0].name);
+  		        	//微信分享接口
+  		        	if(myUtils.isWeiXinBrowse()){
+  		        	wx.ready(function(){
+							    wx.onMenuShareAppMessage({
+							      title: $scope.testHot.title,
+							      desc: $(el).text().substring(0, 30)+"...",
+							     link: location.href.split('#')[0],
+							      imgUrl: 'http://'+location.host+$scope.testHot.img,
+							      trigger: function (res) {
+							        // 不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回
+							       // alert('用户点击发送给朋友');
+							      },
+							      success: function (res) {
+							        myUtils.myLoadingToast("分享成功", null);
+							      },
+							      cancel: function (res) {
+							        myUtils.myLoadingToast("取消分享", null);
+							      },
+							      fail: function (res) {
+							        myUtils.myLoadingToast("分享失败", null);
+							      }
+							    });	
+							    wx.onMenuShareTimeline({
+							        title: $scope.testHot.title, // 分享标题
+							        link: location.href.split('#')[0], // 分享链接
+							        imgUrl: 'http://'+location.host+$scope.testHot.img, // 分享图标
+							        success: function () { 
+							        	myUtils.myLoadingToast("分享成功", null);
+							        },
+							        cancel: function () { 
+							        	myUtils.myLoadingToast("取消分享", null);
+							        }
+							    });
+
+					});}
+  		      		       
+  		      		        	  myUtils.myPrevToast("加载完成", null, "remove");
+  		      		          }  
+  		      		          });
+  		        		}
+  		        	 }
+  		        	 
+  		          }  
+  		          });
+  		}
+    		initTestHot();
+    		
+    		$scope.testList=[];//热门测试列表初始化；
+    		//初始化等级为2的热门测试列表，6个
+    		function initTestList(type){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/list/type?type="+type,  
+  		          success : function(data){
+  		        	 for (var i = 0; i < data.length; i++) {
+  		        		if(data[i].level==2){
+  		        			$.ajax({  
+  		      		          type : "get", 
+  		      		          async : false,
+  		      		          url : "/test/"+data[i].test_id+"/all",  
+  		      		          success : function(d){
+  		      		        	var test=JSON.parse(d);
+  		      		        $scope.testList.push(test);
+  		      		        	  myUtils.myPrevToast("加载完成", null, "remove");
+  		      		          }  
+  		      		          });
+  		        		}
+  		        	 }
+  		          }  
+  		          });
+  		}
+    		initTestList("爱情测试");
+    		initTestList("职场测试");
+    		initTestList("星座测试");
+    		initTestList("财运测试");
+    		initTestList("性格测试");
+    		initTestList("社交测试");
+    		
+    		$scope.noMore=false;//false还有，true没有更多
+    		$scope.hotTestList=[];//热门推荐初始化
+    		$scope.pageNum=1;//第多少个
+    		$scope.pageSize=10;//每页个数
+    		//热门推荐
+    		function initHotTestList(){
+    			$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/test/list?pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&orderName=update_date&orderWay=desc",  
+  		          success : function(data){
+  		        	 //for (var i = 0; i < data.length; i++) {
+  		      		        	//var test=JSON.parse(data);
+  		      		        $scope.hotTestList=data;
+  		      		         myUtils.myPrevToast("加载完成", null, "remove");
+  		        	 //}
+  		          }  
+  		          });
+  		}
+    		initHotTestList();
+    		
+    		//下拉刷新
+    		function onReachBottom(){
+    			$scope.pageNum=$scope.pageNum+$scope.pageSize;
+    			$scope.pageSize=$scope.pageSize;
+    			myUtils.myFootLoadingToast("relative",null,function(){
+    			$.ajax({  
+  		          type : "get",
+  		          timeout: 3000,
+  		          async : false,
+  		          url : "/test/list?pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&orderName=update_date&orderWay=desc",  
+  		          success : function(data){
+  		      		     myUtils.myFootLoadingToast("relative",null,null,"remove");
+  		        	 if(data.length<=0){
+  		        	 $scope.noMore=true;
+  		        	 $scope.$apply();
+  		        	      return;
+  		        	    }
+  		        	    $scope.noMore=false;
+  		      		        $scope.hotTestList=$scope.hotTestList.concat(data);
+  		      		        $scope.$apply();
+  		      		         myUtils.myPrevToast("加载完成", null, "remove");
+  		          }  
+  		          });
+    			},"add");
+  		}
+    		$(window).scroll(function(){
+        		//console.log(myUtils.isScrollBottom(document));
+        	if(!navigator.onLine){
+        		myUtils.myLoadingToast("请检查网络！");
+        		return;
+        		}
+        		if(navigator.onLine && $scope.noMore==false && myUtils.isScrollBottom(document)){
+        			onReachBottom();
+        		}
+        			
+        		});
+    		
+    		 /* $scope.addMore=function(){
+    			$("#addMore").children().text("正在加载中...");
+    			var pageNum=$(".listGroup").size()+1;
+    			var type=$(".nav-active div").text().trim();
+    			console.log(pageNum)
+    			console.log(type)
+    			initData({
+        			pageNum:pageNum,
+        			pageSize:10,
+        			type:type,
+        			orderName:"time",
+        			orderWay:"desc"
+        			});
+    			$("#addMore").children().text("点击加载更多》");
+    		};  */
+    		//跳转页面
+    		$scope.testToProblem=function(test_id){
+    			location.replace("/problem?test_id="+test_id);
+    		};
+
+    		//广告代码
+    		//$("body").append("<div><img style='width:100%;height:10%;position:fixed;left:0;bottom:0'  src='/resources/img/splash.jpg'></img></div>");
+    		/* $.get("/adsense/list/0",function(data){
+    			if(data&&data[0].content){    				
+    			console.log(data)
+    			myUtils.executeJS(data[0].content);
+    			}
+  
+    		}); */
+    	});
+    </script>
+</body>
+</html>
