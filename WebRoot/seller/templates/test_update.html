@@ -11,7 +11,7 @@
   </div>
     <label  class="text-danger">※测试类型</label>
   <div class="comment-input-margin ">
-   <select class=" comment-input" ng-model="test.type" ng-init="test.type='爱情测试'" ng-options="x for x in ['爱情测试','星座测试','社交测试','性格测试','财运测试','职场测试']">
+   <select class=" comment-input" ng-model="test.type||'爱情测试'"  ng-options="x for x in ['爱情测试','星座测试','社交测试','性格测试','财运测试','职场测试']">
 </select>
   </div>
     <label  class="text-danger">*等级（1为最高级，首页置顶顶部1个，2次之，首页6个不同类型，10为正常值）</label>

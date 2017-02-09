@@ -30,7 +30,11 @@
 				<div class="media-heading" ></div>
 				<div class="pull-left">
 					<div class="comment-right-body-title"><span ng-bind="test.title||''"></span></div>
-					<div class="text-muted"><span ng-bind="test.update_date||''"></span><span class="newsType" ng-bind="test.type||''"></span></div>
+					<div class="text-muted">
+						更新时间：<span ng-bind="test.update_date||''"></span>
+						类型：<span class="newsType" ng-bind="test.type||''"></span>
+						等级：<span  ng-bind="test.level" style="color:red;"></span>
+					</div>
 				</div>
 				<div class="pull-right">
 					<button class=" btn btn-warning" ng-click="updateTest(test)"><span class="glyphicon glyphicon-pencil"></span>编辑</button>
