@@ -82,7 +82,7 @@
     			$.ajax({  
   		          type : "get",
   		          async : false,
-  		          url : "/test/list/type??pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
+  		          url : "/test/list/type?pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
   		          success : function(data){
   		      		        $scope.typeTestList=data;
   		      		         myUtils.myPrevToast("加载完成", null, "remove");

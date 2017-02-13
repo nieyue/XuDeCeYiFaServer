@@ -39,7 +39,7 @@
         </p>
         <hr/>
         <!-- 热门推荐 -->
-		<div class="list-group media comment-list-item" ng-if="typeTestList.length>=1 && typeTestList[0].test_id!=test.test_id">
+		<div class="list-group media comment-list-item" ng-if="typeTestList.length>1 || (typeTestList.length==1 && typeTestList[0].test_id!=test.test_id)">
 			<div class="media-center">
 				<div class="comment-hot-title">
 					<span class="comment-hot-icon"></span>
@@ -137,7 +137,7 @@
     			$.ajax({  
   		          type : "get",
   		          async : false,
-  		          url : "/test/list/type??pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
+  		          url : "/test/list/type?pageNum="+$scope.pageNum+"&pageSize="+$scope.pageSize+"&type="+$scope.type+"&orderName=update_date&orderWay=desc",  
   		          success : function(data){
   		      		        $scope.typeTestList=data;
   		      		         myUtils.myPrevToast("加载完成", null, "remove");
