@@ -12,7 +12,7 @@
 	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
 	 ">
  	<!-- 配置自定义的时间任务(Job) -->  
-<bean id="myJob" class="com.nieyue.quartz.AdvertiseSpaceJob" />
+<bean id="myJob" class="com.nieyue.quartz.MyJob" />
  	<!-- 配置方法调用任务工厂(XXXJobDetailFactoryBean) --> 
  	<!-- <bean name="simpleJob" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
  		<property name="targetObject" ref="myJob"></property>

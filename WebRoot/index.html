@@ -65,11 +65,11 @@ background-color: white;
 		<!-- 分类推荐 九宫图 -->
 		 <div style="text-align:center;">
                 <a  href="/type_list?type={{test.type}}" style="margin:3px 3px;display:inline-block;width:31% !important;position:relative;left:0;top:0;padding:0 !important;" ng-repeat="test in testList">
-                    <img style="width:100%;" ng-src="{{test.img}}" />
+                    <img style="width:100%;height:80px;" ng-src="{{test.img}}" />
                      <div style="position:absolute;left:0;top:30%;color:white;width:100%;font-size:16px;">
-                     <div style="text-align:center;" class="app-center">{{test.type}}
-                     </div>
-    		</div>
+	                     <div style="text-align:center;" class="app-center">{{test.type}}
+	                     </div>
+    				</div>
                 </a>
             </div>
             <!-- 分类推荐 九宫图 end-->
