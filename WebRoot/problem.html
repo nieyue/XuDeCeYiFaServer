@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>问题</title>
+<title></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 <meta name="viewport"
 	content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -16,10 +16,10 @@
 	<div ng-controller="problemCtrl" class="comment-wrap" >
     <div class=" thumbnail" style="margin-bottom:0;">
 	<!-- 问题图片 -->
-      <img ng-src="{{test.img}}" >
+  <img ng-src="{{test.img}}" >
 	<!-- 问题图片 end-->
       <div class="caption">
-        <h3><span ng-bind="test.title"></span></h3>
+       <h3><span ng-bind="test.title"></span></h3>
         <hr/>
         <p ><span ng-bind="problem.name"></span></p>
         <hr/>
@@ -28,7 +28,7 @@
         <a href="/answer?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
        <span ng-bind="answer.name"></span>
         </a> 
-        <a href="/problem?test_id={{test.test_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+        <a href="/problem?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
        <span ng-bind="answer.name"></span>
         </a>  
         </p>
@@ -55,20 +55,48 @@
     		if(!myUtils.GetQueryString("test_id")){
     		return;
     		}
+    		
     		$scope.test_id=myUtils.GetQueryString("test_id");
-    		$scope.problem_id=myUtils.GetQueryString("problem_id");
-    		$scope.order_number=myUtils.GetQueryString("order_number");
+    		$.ajax({
+    			  type : "get",
+  		          async : false,
+  		          url : "/test/"+$scope.test_id,  
+  		          success : function(data){
+  		          document.title=data.title
+  		          	$scope.test=data;
+  		          	initProblem();
+  		          }
+    		})
+    		
+    		
     		//初始化问题
     		function initProblem(){
+    		$scope.problem_id=myUtils.GetQueryString("problem_id");
+    		$scope.order_number=myUtils.GetQueryString("order_number");
+    		var url="";
+    		console.log($scope.problem_id)
+    		 //如果没有problem_id，则默认为第一个
+    		
+    			url="/problem/list/all/test?testId="+$scope.test_id+"&pageSize=1&orderWay=asc&orderName=order_number"
+    		
+    		
     			$.ajax({  
   		          type : "get",
   		          async : false,
-  		          url : "/test/"+$scope.test_id+"/all",  
+  		          url : url,  
   		          success : function(data){
-  		           $scope.test=JSON.parse(data);
-  		           console.log($scope.test)
+  		          if(!$scope.problem_id){
+  		          	$scope.problem=data[0];
+  		          }else if($scope.problem_id&&$scope.order_number){
+  		          	for(var i=0;i<data.length;i++){
+  		          		if(data[i].order_number==$scope.order_number){
+  		          			$scope.problem=data[i];
+  		          		}
+  		          	}
+		    		}
+  		          initAnswer();
   	//直接跳转到问题，开始测试
-    if($scope.problem_id){
+   /*  if($scope.problem_id){
     for (var i = 0; i < $scope.test.problemList.length; i++) {
       if($scope.test.problemList[i].problem_id==$scope.problem_id){
            $scope.problem=$scope.test.problemList[i];
@@ -84,7 +112,7 @@
     }else if(!$scope.problem_id&&!$scope.order_number){
       //如果没有problem_id也没有order_number，则默认为第一个
            $scope.problem=$scope.test.problemList[0];
-    }
+    } */
     //$scope.answerList= $scope.problem.answerList;
     //console.log($scope.answerList)
       //微信接口
@@ -129,7 +157,21 @@
   		          }  
   		          });
   		}
-    		initProblem();
+  		
+  		function initAnswer(){
+  		$.ajax({  
+  		          type : "get",
+  		          async : false,
+  		          url : "/answer/list/all/problem?problemId="+$scope.problem.problem_id,  
+  		          success : function(data){
+  		          	$scope.problem.answerList=data;
+  		          
+  		          }
+  		          
+  		          
+  		          });
+  		
+  		}
     		
     	});
     	

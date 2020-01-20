@@ -23,7 +23,7 @@ public interface TestService {
 	/** 根据类型测试 总共数目 */	
 	public int countAllByType(String type);
 	/** 根据类型测试 分页信息 */
-	public List<Test> browsePagingTestByType(String type,int pageNum,int pageSize,String orderName,String orderWay) ;		
+	public List<Test> browsePagingTestByType(Integer level,String type,int pageNum,int pageSize,String orderName,String orderWay) ;		
 	/** 测试 分页信息 */
 	public List<Test> browsePagingTest(int pageNum,int pageSize,String orderName,String orderWay);		
 	/** 测试 全部信息 */

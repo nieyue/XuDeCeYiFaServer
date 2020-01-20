@@ -56,13 +56,14 @@ public class TestController {
 	 */
 	@RequestMapping(value = "/list/type", method = {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody List<Test> browsePagingTestByType(
+			@RequestParam(value="level",required=false)Integer level,
 			@RequestParam(value="type")String type,
 			@RequestParam(value="pageNum",defaultValue="1",required=false)int pageNum,
 			@RequestParam(value="pageSize",defaultValue="10",required=false) int pageSize,
 			@RequestParam(value="orderName",required=false,defaultValue="test_id") String orderName,
 			@RequestParam(value="orderWay",required=false,defaultValue="desc") String orderWay,HttpSession session)  {
 			List<Test> list = new ArrayList<Test>();
-			list= testService.browsePagingTestByType(type,pageNum, pageSize, orderName, orderWay);
+			list= testService.browsePagingTestByType(level,type,pageNum, pageSize, orderName, orderWay);
 			return list;
 	}
 	/**

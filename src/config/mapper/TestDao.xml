@@ -78,6 +78,9 @@ WHERE test_id=#{testId}
    		 update_date
 	FROM test_tb
 	WHERE type=#{type}
+	<if test="level!=null">
+	AND level=#{level}
+	</if>
 	ORDER BY
 		${orderName}  ${orderWay}
 	LIMIT

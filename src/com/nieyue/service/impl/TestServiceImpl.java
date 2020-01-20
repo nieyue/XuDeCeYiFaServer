@@ -74,7 +74,7 @@ public class TestServiceImpl implements TestService{
 	}
 
 	@Override
-	public List<Test> browsePagingTestByType(String type, int pageNum,
+	public List<Test> browsePagingTestByType(Integer level,String type, int pageNum,
 			int pageSize, String orderName, String orderWay) {
 		if(pageNum<1){
 			pageNum=1;
@@ -82,7 +82,7 @@ public class TestServiceImpl implements TestService{
 		if(pageSize<1){
 			pageSize=0;//没有数据
 		}
-		List<Test> l = testDao.browsePagingTestByType(type,pageNum-1, pageSize, orderName, orderWay);
+		List<Test> l = testDao.browsePagingTestByType(level,type,pageNum-1, pageSize, orderName, orderWay);
 		return l;
 	}
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="display:none">
 <head>
 <title>测壹发</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -28,7 +28,7 @@ background-color: white;
 		<div style="margin-top:50px !important;">
 		
 			<!-- testHot -->
-		<div   class="listGroup list-group media "  >
+		<!-- <div   class="listGroup list-group media "  >
 			 <div style="position:relative;left:0;top:0">
 			  <a style="padding:0 !important;" href="/problem?test_id={{testHot.test_id}}&problem_id={{testHot.problemList[0].problem_id}}" >
 			    <img class="app-topbar" ng-src="{{testHot.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
@@ -37,10 +37,10 @@ background-color: white;
 			<div style="position:absolute;left:10%;top:60%;color:white;width:80%;font-size:16px;" class="app-center">{{testHot.problemList[0].name}}</div>
 			  </a>
 			  </div>
-		</div>
+		</div> -->
 		<!-- testHot end -->
 			<!-- testList -->
-		<div   class="listGroup list-group media "  ng-repeat="test in testList">
+		<!-- <div   class="listGroup list-group media "  ng-repeat="test in testList">
 			 <div style="position:relative;left:0;top:0">
 			  <a style="padding:0 !important;" href="/problem?test_id={{test.test_id}}&problem_id={{test.problemList[0].problem_id}}" >
 			    <img class="app-topbar" ng-src="{{test.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
@@ -49,7 +49,7 @@ background-color: white;
 			<div style="position:absolute;left:10%;top:60%;color:white;width:80%;font-size:16px;" class="app-center">{{test.problemList[0].name}}</div>
 			  </a>
 			  </div>
-		</div>
+		</div> -->
 		<!-- testList end -->
 		
 		<!-- 分类推荐 -->
@@ -194,6 +194,8 @@ background-color: white;
 							    });
 
 					});}
+					
+									
   		      		       
   		      		        	  myUtils.myPrevToast("加载完成", null, "remove");
   		      		          }  
@@ -204,7 +206,7 @@ background-color: white;
   		          }  
   		          });
   		}
-    		initTestHot();
+    		//initTestHot();
     		
     		$scope.testList=[];//热门测试列表初始化；
     		//初始化等级为2的热门测试列表，6个
@@ -212,17 +214,18 @@ background-color: white;
     			$.ajax({  
   		          type : "get",
   		          async : false,
-  		          url : "/test/list/type?type="+type,  
+  		          url : "/test/list/type?type="+type+"&level=2&pageSize=1",  
   		          success : function(data){
   		        	 for (var i = 0; i < data.length; i++) {
   		        		if(data[i].level==2){
   		        			$.ajax({  
   		      		          type : "get", 
   		      		          async : false,
-  		      		          url : "/test/"+data[i].test_id+"/all",  
+  		      		          //url : "/test/"+data[i].test_id+"/all",  
+  		      		          url : "/test/"+data[i].test_id,  
   		      		          success : function(d){
-  		      		        	var test=JSON.parse(d);
-  		      		        $scope.testList.push(test);
+  		      		        	//var test=JSON.parse(d);
+  		      		        	  $scope.testList.push(d);
   		      		        	  myUtils.myPrevToast("加载完成", null, "remove");
   		      		          }  
   		      		          });
@@ -254,6 +257,7 @@ background-color: white;
   		      		        $scope.hotTestList=data;
   		      		         myUtils.myPrevToast("加载完成", null, "remove");
   		        	 //}
+  		        	 $("html").show();
   		          }  
   		          });
   		}
