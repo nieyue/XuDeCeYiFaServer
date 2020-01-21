@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="display:none;">
 <head>
 <title></title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -25,10 +25,10 @@
         <hr/>
         <p ng-repeat="answer in problem.answerList">
 <!--         <p ng-repeat="answer in answerList"> -->
-        <a href="/answer?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+        <a href="/answer.html?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
        <span ng-bind="answer.name"></span>
         </a> 
-        <a href="/problem?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+        <a href="/problem.html?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
        <span ng-bind="answer.name"></span>
         </a>  
         </p>
@@ -49,6 +49,10 @@
 	<script>
 
 	$(function(){
+	//返回
+	 noback(function(){
+		    location.href=index_back;   
+		  })
 	});
     	var problemApp=angular.module('problemApp',[]);
     	problemApp.controller('problemCtrl',function($scope){
@@ -165,7 +169,7 @@
   		          url : "/answer/list/all/problem?problemId="+$scope.problem.problem_id,  
   		          success : function(data){
   		          	$scope.problem.answerList=data;
-  		          
+  		          	$("html").show();
   		          }
   		          
   		          

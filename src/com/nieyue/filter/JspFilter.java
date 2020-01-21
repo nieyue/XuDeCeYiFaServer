@@ -42,13 +42,13 @@ public class JspFilter implements Filter{
         //chain.doFilter(request, response);
         // 获得用户请求的http://localhost:8080/YaYaoMall/mall/mobile/index
         // 获得用户请求的http://localhost:8080/mall/mobile/indexp
-        String rpath = servletRequest.getRequestURI(); 						// /YaYaoMall/mall/mobile/index /mall/mobile/index 
-        String path=servletRequest.getServletPath();						// /mall/mobile/index           /mall/mobile/index
-        String cpath = servletRequest.getContextPath(); 					// /YaYaoMall  					空 
-        String strBackUrl=servletRequest.getRealPath("/");					// D:\nieyue\tomcat\apache-tomcat-7.0.57-windows-x64\apache-tomcat-7.0.57\webapps\YaYaoMall\ 
-        String strServletUrl=servletRequest.getServletContext().getRealPath("");// D:\nieyue\tomcat\apache-tomcat-7.0.57-windows-x64\apache-tomcat-7.0.57\webapps\YaYaoMall 
+       // String rpath = servletRequest.getRequestURI(); 						// /YaYaoMall/mall/mobile/index /mall/mobile/index 
+       // String path=servletRequest.getServletPath();						// /mall/mobile/index           /mall/mobile/index
+       // String cpath = servletRequest.getContextPath(); 					// /YaYaoMall  					空 
+       // String strBackUrl=servletRequest.getRealPath("/");					// D:\nieyue\tomcat\apache-tomcat-7.0.57-windows-x64\apache-tomcat-7.0.57\webapps\YaYaoMall\ 
+       // String strServletUrl=servletRequest.getServletContext().getRealPath("");// D:\nieyue\tomcat\apache-tomcat-7.0.57-windows-x64\apache-tomcat-7.0.57\webapps\YaYaoMall 
      
-        if(rpath.startsWith("/resources")&&new File(strServletUrl+rpath).exists()){
+       /* if(rpath.startsWith("/resources")&&new File(strServletUrl+rpath).exists()){
 			servletRequest.getRequestDispatcher(rpath).forward(request, response);
 		}else if(new File(strServletUrl+rpath+".html").exists()){
 				servletRequest.getRequestDispatcher(rpath+".html").forward(request,response);
@@ -57,7 +57,8 @@ public class JspFilter implements Filter{
 		}
 		else{
 				chain.doFilter(request, response);
-			}
+			}*/
+        chain.doFilter(request, response);
 	//}
 		
 }

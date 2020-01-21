@@ -30,7 +30,7 @@ background-color: white;
 			<!-- testHot -->
 		<!-- <div   class="listGroup list-group media "  >
 			 <div style="position:relative;left:0;top:0">
-			  <a style="padding:0 !important;" href="/problem?test_id={{testHot.test_id}}&problem_id={{testHot.problemList[0].problem_id}}" >
+			  <a style="padding:0 !important;" href="/problem.html?test_id={{testHot.test_id}}&problem_id={{testHot.problemList[0].problem_id}}" >
 			    <img class="app-topbar" ng-src="{{testHot.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
 			    <div style="position:absolute;left:5%;top:20%;color:white;width:90%;font-size:26px;" class="app-center">{{testHot.title}}
 			    </div>
@@ -42,7 +42,7 @@ background-color: white;
 			<!-- testList -->
 		<!-- <div   class="listGroup list-group media "  ng-repeat="test in testList">
 			 <div style="position:relative;left:0;top:0">
-			  <a style="padding:0 !important;" href="/problem?test_id={{test.test_id}}&problem_id={{test.problemList[0].problem_id}}" >
+			  <a style="padding:0 !important;" href="/problem.html?test_id={{test.test_id}}&problem_id={{test.problemList[0].problem_id}}" >
 			    <img class="app-topbar" ng-src="{{test.img}}" style="border-bottom:1px solid #ccc;width:100%;" />
 			    <div style="position:absolute;left:5%;top:20%;color:white;width:90%;font-size:26px;" class="app-center">{{test.title}}
 			    </div>
@@ -64,7 +64,7 @@ background-color: white;
 		</div>
 		<!-- 分类推荐 九宫图 -->
 		 <div style="text-align:center;">
-                <a  href="/type_list?type={{test.type}}" style="margin:3px 3px;display:inline-block;width:31% !important;position:relative;left:0;top:0;padding:0 !important;" ng-repeat="test in testList">
+                <a  href="/type_list.html?type={{test.type}}" style="margin:3px 3px;display:inline-block;width:31% !important;position:relative;left:0;top:0;padding:0 !important;" ng-repeat="test in testList">
                     <img style="width:100%;height:80px;" ng-src="{{test.img}}" />
                      <div style="position:absolute;left:0;top:30%;color:white;width:100%;font-size:16px;">
 	                     <div style="text-align:center;" class="app-center">{{test.type}}
@@ -126,6 +126,10 @@ background-color: white;
 	<script src="/resources/js/weixinlogin.js"></script>
 	<script>
 	$(function(){
+	//返回
+	 noback(function(){
+		    location.href=index_back;   
+		  })
 		/* $(window).scroll(function(){
     		console.log(myUtils.isScrollBottom(document));
     		if(myUtils.isScrollBottom(document)){}
@@ -317,7 +321,7 @@ background-color: white;
     		};  */
     		//跳转页面
     		$scope.testToProblem=function(test_id){
-    			location.replace("/problem?test_id="+test_id);
+    			location.replace("/problem.html?test_id="+test_id);
     		};
 
     		//广告代码

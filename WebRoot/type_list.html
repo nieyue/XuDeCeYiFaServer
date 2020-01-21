@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html style="display:none;">
 <head>
 <title>列表</title>
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -60,6 +60,10 @@
 	<script>
 
 	$(function(){
+	//返回
+	 noback(function(){
+		    location.href=index_back;   
+		  })
 	});
     	var typeListApp=angular.module('typeListApp',[]);
     	typeListApp.filter("dateDiff",function(){
@@ -86,6 +90,7 @@
   		          success : function(data){
   		      		        $scope.typeTestList=data;
   		      		         myUtils.myPrevToast("加载完成", null, "remove");
+  		      		         $("html").show();
   		          }  
   		          });
   		}
@@ -129,7 +134,7 @@
         		});
         		//跳转页面
     		$scope.testToProblem=function(test_id){
-    			location.replace("/problem?test_id="+test_id);
+    			location.replace("/problem.html?test_id="+test_id);
     		};
         		
     	});

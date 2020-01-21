@@ -451,7 +451,7 @@
        			console.log(data)
        			//$scope.manager_phone=data.manager_phone;
        		if(data==null||data==''){
-       			location.replace("/seller/index");
+       			location.replace("/seller/index.html");
        		}
        	});
    		//登录退出
@@ -459,7 +459,7 @@
    			myUtils.myLoginOut("确定退出吗？", function(){
    				$.get("/admin/loginout",function(data){
    	   					myUtils.myLoadingToast("退出成功", null);   	   				
-   						location.replace("/seller/index");
+   						location.replace("/seller/index.html");
    	   			});
    			});
    		};
