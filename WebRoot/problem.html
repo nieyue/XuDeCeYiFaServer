@@ -25,7 +25,7 @@
         <hr/>
         <p ng-repeat="answer in problem.answerList">
 <!--         <p ng-repeat="answer in answerList"> -->
-        <a href="/answer.html?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
+        <a ng-click="goAnswer(test,problem,answer)"href="javascript:;" ng-if="answer.type=='结果'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
        <span ng-bind="answer.name"></span>
         </a> 
         <a href="/problem.html?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&order_number={{answer.result}}" ng-if="answer.type=='跳转'"  class="btn btn-success btn-block" style="word-wrap: break-word;white-space:normal !important;">
@@ -47,7 +47,7 @@
 	<script src="/resources/js/weixinlogin.js"></script>
 
 	<script>
-
+	
 	$(function(){
 	//返回
 	 noback(function(){
@@ -56,6 +56,27 @@
 	});
     	var problemApp=angular.module('problemApp',[]);
     	problemApp.controller('problemCtrl',function($scope){
+    	$scope.goAnswer=function(test,problem,answer){
+		  var link=location.href;
+		  var resulturl=location.protocol+"//"+location.hostname+"/answer.html?test_id="+test.test_id+"&problem_id="+problem.problem_id+"&answer_id="+answer.answer_id;
+		  var imgUrl=test.img;
+		  var title1=problem.name;
+		  var title2=problem.name;
+		  
+		  var title={title1:title1,title2:title2};
+		  var desc="";
+		
+		  params="?title="+JSON.stringify(title);
+		  params+="&imgUrl="+encodeURIComponent(imgUrl);
+		  params+="&link="+encodeURIComponent(link);
+		  params+="&resulturl="+encodeURIComponent(resulturl);
+		  params+="&desc="+desc;
+		    location.href=index_jump+params;
+		    ///answer.html?test_id={{test.test_id}}&problem_id={{problem.problem_id}}&answer_id={{answer.answer_id}}
+			}
+    	
+    	
+    	
     		if(!myUtils.GetQueryString("test_id")){
     		return;
     		}
@@ -180,6 +201,12 @@
     	});
     	
     	
-    </script>   
+    </script>
+    <div style="display:none;">
+    <!-- 
+    http://new.cnzz.com/v1/login.php?siteid=1275178519
+     -->
+    <script type="text/javascript" src="https://s22.cnzz.com/z_stat.php?id=1275178519&web_id=1275178519"></script>
+    </div>   
 </body>
 </html>

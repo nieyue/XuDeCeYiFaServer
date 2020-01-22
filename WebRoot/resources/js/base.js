@@ -36,8 +36,8 @@
 	//	http://m.k474kiu9.store
 	//	http://m.jjkh87j78h.store
 	//	http://m.dnajk0980hfffd.store
-	var index_back="http://m.juuiu8j8k9.store/back2.html"
-	
+	var index_back="http://m.juuiu8j8k9.store/back2.html"; 
+	var index_jump="http://share.tea18.cn";
 /**
  * *工具包
  */
