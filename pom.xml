@@ -35,7 +35,7 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
 		<!-- mybatis版本号 -->
 		<mybatis.version>3.2.6</mybatis.version>
 		<!-- log4j日志文件管理包版本 -->
-		<log4j.version>2.0</log4j.version>
+		<log4j.version>2.14.1</log4j.version>
 	</properties>
 
 	<dependencies>
